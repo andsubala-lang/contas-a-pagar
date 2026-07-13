@@ -61,23 +61,23 @@ export default function BillCard({
       }`}
     >
       <div
-        className={`stub sm:w-20 w-full shrink-0 flex flex-row sm:flex-col items-center justify-center gap-2 sm:gap-0 ${stubBg} py-2 sm:py-3`}
+        className={`stub sm:w-20 w-full shrink-0 flex flex-row sm:flex-col items-center justify-center gap-1.5 sm:gap-0 ${stubBg} py-1.5 sm:py-3`}
       >
-        <span className={`font-display text-2xl font-semibold ${stubText}`}>
+        <span className={`font-display text-lg sm:text-2xl font-semibold ${stubText}`}>
           {bill.is_paid ? "✓" : days < 0 ? Math.abs(days) : days}
         </span>
-        <span className={`font-mono text-[10px] text-center px-1 leading-tight ${stubText}`}>
+        <span className={`font-mono text-[9px] sm:text-[10px] text-center px-1 leading-tight ${stubText}`}>
           {label}
         </span>
       </div>
 
-      <div className="flex-1 p-4 flex flex-col gap-3 min-w-0">
+      <div className="flex-1 p-3 sm:p-4 flex flex-col gap-2.5 sm:gap-3 min-w-0">
         <div className="min-w-0">
-          <p className="font-medium text-[var(--ink)] truncate">{bill.name}</p>
-          <p className="text-sm text-[var(--ink-soft)] font-mono">
+          <p className="font-medium text-[var(--ink)] text-sm sm:text-base truncate">{bill.name}</p>
+          <p className="text-xs sm:text-sm text-[var(--ink-soft)] font-mono">
             {formatMoneyBRL(bill.amount)} · vence {formatDateBR(bill.due_date)}
           </p>
-          <p className="text-xs text-[var(--ink-soft)] mt-0.5">
+          <p className="text-[11px] sm:text-xs text-[var(--ink-soft)] mt-0.5">
             {CATEGORY_LABEL[bill.category] || "Outros"}
             {bill.recurring !== "none" && (
               <span> · {bill.recurring === "monthly" ? "mensal" : "anual"}</span>
@@ -88,7 +88,7 @@ export default function BillCard({
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href={`/contas/${bill.id}/editar`}
-            className="flex-1 sm:flex-initial text-center text-sm text-[var(--ink-soft)] px-3 py-1.5 rounded-lg border border-[var(--line)]"
+            className="flex-1 sm:flex-initial text-center text-xs sm:text-sm text-[var(--ink-soft)] px-3 py-1.5 rounded-lg border border-[var(--line)]"
           >
             Editar
           </Link>
@@ -96,7 +96,7 @@ export default function BillCard({
             <button
               disabled={isPending}
               onClick={() => startTransition(() => reopenBill(bill.id))}
-              className="flex-1 sm:flex-initial text-sm px-3 py-1.5 rounded-lg border border-[var(--line)] text-[var(--ink-soft)]"
+              className="flex-1 sm:flex-initial text-xs sm:text-sm px-3 py-1.5 rounded-lg border border-[var(--line)] text-[var(--ink-soft)]"
             >
               Reabrir
             </button>
@@ -104,7 +104,7 @@ export default function BillCard({
             <button
               disabled={isPending}
               onClick={() => startTransition(() => markBillPaid(bill.id))}
-              className="flex-1 sm:flex-initial text-sm px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-ink)] disabled:opacity-60"
+              className="flex-1 sm:flex-initial text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-ink)] disabled:opacity-60"
             >
               Marcar paga
             </button>

@@ -36,16 +36,16 @@ export default async function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-[var(--bg)] pb-24">
-      <header className="px-6 pt-8 pb-6 flex items-start justify-between">
+      <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-5 sm:pb-6 flex items-start justify-between">
         <div>
-          <p className="font-mono text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-1">
+          <p className="font-mono text-[10px] sm:text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-1">
             {new Date().toLocaleDateString("pt-BR", {
               weekday: "long",
               day: "2-digit",
               month: "long",
             })}
           </p>
-          <h1 className="font-display text-3xl font-semibold text-[var(--primary)]">
+          <h1 className="font-display text-2xl sm:text-3xl font-semibold text-[var(--primary)]">
             Contas a pagar
           </h1>
         </div>
@@ -57,7 +57,7 @@ export default async function DashboardPage() {
         </Link>
       </header>
 
-      <div className="px-6 space-y-8 max-w-2xl">
+      <div className="px-4 sm:px-6 space-y-6 sm:space-y-8 max-w-2xl">
         {all.length === 0 && (
           <div className="bg-[var(--surface)] border border-dashed border-[var(--line)] rounded-2xl p-8 text-center">
             <p className="font-display text-lg text-[var(--primary)] mb-1">
@@ -105,10 +105,10 @@ function Section({
 }) {
   return (
     <section>
-      <h2 className="font-mono text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-3">
+      <h2 className="font-mono text-[10px] sm:text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-2 sm:mb-3">
         {title} · {bills.length}
       </h2>
-      <div className="space-y-3">
+      <div className="space-y-2.5 sm:space-y-3">
         {bills.map((b) => (
           <BillCard key={b.id} bill={b} leadDays={leadDays} />
         ))}
