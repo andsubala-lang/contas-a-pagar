@@ -34,8 +34,8 @@ export default function BillCard({
   const [isPending, startTransition] = useTransition();
   const days = daysUntil(bill.due_date);
 
-  let stubBg = "bg-[var(--success-soft)]";
-  let stubText = "text-[var(--success)]";
+  let stubBg = "bg-[var(--ok-soft)]";
+  let stubText = "text-[var(--ok)]";
   let label = "em dia";
 
   if (bill.is_paid) {
@@ -48,7 +48,7 @@ export default function BillCard({
     label = days === -1 ? "1 dia atrasada" : `${Math.abs(days)} dias atrasada`;
   } else if (days <= leadDays) {
     stubBg = "bg-[var(--amber-soft)]";
-    stubText = "text-[#a8641c]";
+    stubText = "text-[var(--amber)]";
     label = days === 0 ? "vence hoje" : days === 1 ? "vence amanhã" : `faltam ${days} dias`;
   } else {
     label = `faltam ${days} dias`;

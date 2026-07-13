@@ -13,11 +13,13 @@
   --primary: #2f6f6b;
   --primary-ink: #f2f6f5;
 
-  --amber: #f0a75c;
-  --amber-soft: rgba(240, 167, 92, 0.14);
-  --amber-ink: #f0a75c;
+  --amber: #d9a441;
+  --amber-soft: rgba(217, 164, 65, 0.15);
+  --amber-ink: #d9a441;
   --danger: #e0836b;
   --danger-soft: rgba(224, 131, 107, 0.14);
+  --ok: #6fb3ae;
+  --ok-soft: rgba(111, 179, 174, 0.14);
   --success: #74c08f;
   --success-soft: rgba(116, 192, 143, 0.14);
 }
