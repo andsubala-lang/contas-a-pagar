@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f2f4f3;
+  --surface: #ffffff;
+  --ink: #16333a;
+  --ink-soft: #4b6066;
+  --line: #dde3e1;
+
+  --primary: #1f3a3d;
+  --primary-ink: #ffffff;
+
+  --amber: #e8963e;
+  --amber-soft: #fbead4;
+  --danger: #c6533a;
+  --danger-soft: #f7e2dc;
+  --success: #4c7a5b;
+  --success-soft: #e2ede4;
+}
+
+* {
+  border-color: var(--line);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), serif;
+}
+
+.font-mono {
+  font-family: var(--font-plex-mono), monospace;
+}
+
+/* Stub / ledger-tab signature element */
+.stub {
+  border-right: 1px dashed var(--line);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    animation: fadeIn 0.25s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
