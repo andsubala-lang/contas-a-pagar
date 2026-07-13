@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces, IBM_Plex_Mono } from "next/font/google";
+import { Inter, Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const fraunces = Fraunces({
+const display = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-fraunces",
-  weight: ["500", "600"],
+  variable: "--font-display",
+  weight: ["500", "700"],
 });
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
@@ -16,7 +16,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Contas a Pagar",
+  title: "Nexus",
   description: "Seus vencimentos, sempre em dia.",
   manifest: "/manifest.json",
   icons: {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#12181a",
+  themeColor: "#0d0f12",
   width: "device-width",
   initialScale: 1,
 };
@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${inter.variable} ${fraunces.variable} ${plexMono.variable} antialiased`}
+        className={`${inter.variable} ${display.variable} ${plexMono.variable} antialiased`}
       >
         <ServiceWorkerRegister />
         {children}

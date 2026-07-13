@@ -49,7 +49,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm fade-in">
         <div className="mb-8 text-center">
           <p className="font-mono text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-2">
-            Contas a Pagar
+            Nexus
           </p>
           <h1 className="font-display text-3xl font-semibold text-[var(--primary)]">
             {mode === "entrar" ? "Acessar sua conta" : "Criar sua conta"}

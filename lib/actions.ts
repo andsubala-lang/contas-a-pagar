@@ -209,7 +209,7 @@ export async function sendTestPush() {
   );
 
   const payload = JSON.stringify({
-    title: "Contas a Pagar",
+    title: "Nexus",
     body: "Notificação de teste — está tudo funcionando!",
     url: "/",
     tag: "teste",

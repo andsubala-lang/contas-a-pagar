@@ -46,7 +46,7 @@ export default async function DashboardPage() {
             })}
           </p>
           <h1 className="font-display text-2xl sm:text-3xl font-semibold text-[var(--primary)]">
-            Contas a pagar
+            Nexus
           </h1>
         </div>
         <Link

@@ -3,25 +3,24 @@
 @tailwind utilities;
 
 :root {
-  --bg: #12181a;
-  --surface: #1b2426;
-  --surface-input: #212b2d;
-  --ink: #eef2f1;
-  --ink-soft: #93a3a1;
-  --line: #2b3638;
+  --bg: #0d0f12;
+  --surface: #171a1f;
+  --surface-input: #1d2128;
+  --ink: #f2f4f7;
+  --ink-soft: #8b93a3;
+  --line: #262b33;
 
-  --primary: #2f6f6b;
-  --primary-ink: #f2f6f5;
+  --primary: #3b82f6;
+  --primary-ink: #f5f8ff;
 
-  --amber: #d9a441;
-  --amber-soft: rgba(217, 164, 65, 0.15);
-  --amber-ink: #d9a441;
-  --danger: #e0836b;
-  --danger-soft: rgba(224, 131, 107, 0.14);
-  --ok: #6fb3ae;
-  --ok-soft: rgba(111, 179, 174, 0.14);
-  --success: #74c08f;
-  --success-soft: rgba(116, 192, 143, 0.14);
+  --amber: #f2732e;
+  --amber-soft: rgba(242, 115, 46, 0.16);
+  --danger: #ef4444;
+  --danger-soft: rgba(239, 68, 68, 0.15);
+  --ok: #60a5fa;
+  --ok-soft: rgba(59, 130, 246, 0.14);
+  --success: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.14);
 }
 
 * {
@@ -39,7 +38,7 @@ body {
 }
 
 .font-display {
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-display), sans-serif;
 }
 
 .font-mono {
@@ -56,7 +55,6 @@ input::placeholder {
   opacity: 0.7;
 }
 
-/* Stub / ledger-tab signature element */
 .stub {
   border-right: 1px dashed var(--line);
 }

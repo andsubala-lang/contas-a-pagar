@@ -13,14 +13,14 @@ self.addEventListener("push", (event) => {
   try {
     payload = event.data.json();
   } catch {
-    payload = { title: "Contas a Pagar", body: event.data.text() };
+    payload = { title: "Nexus", body: event.data.text() };
   }
 
-  const title = payload.title || "Contas a Pagar";
+  const title = payload.title || "Nexus";
   const options = {
     body: payload.body || "",
     icon: "/icons/icon-192.png",
-    badge: "/icons/icon-192.png",
+    badge: "/icons/badge-96.png",
     data: { url: payload.url || "/" },
     tag: payload.tag || undefined,
   };
