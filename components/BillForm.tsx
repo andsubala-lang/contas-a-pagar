@@ -34,7 +34,7 @@ export default function BillForm({
           setError(e?.message || "Não foi possível salvar. Tente novamente.");
         }
       }}
-      className="bg-[var(--surface)] rounded-2xl border border-[var(--line)] p-6 space-y-4"
+      className="space-y-5"
     >
       <div>
         <label className="block text-sm text-[var(--ink-soft)] mb-1">

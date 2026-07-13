@@ -47,15 +47,13 @@ export default async function DashboardPage({
 
   // Status headline — this single line is what the whole ritual depends on:
   // it must answer "estou seguro, ou preciso agir?" before any list loads.
+  // It sets the tone; the cards below do the counting, so the phrase never
+  // needs to recite numbers back at the person.
   let headline = "Tudo tranquilo";
   if (overdue.length > 0) {
-    headline =
-      overdue.length === 1
-        ? "1 conta atrasada — resolve quando puder"
-        : `${overdue.length} contas atrasadas — resolve quando puder`;
+    headline = "Vamos resolver isso quando puder";
   } else if (dueSoon.length > 0) {
-    headline =
-      dueSoon.length === 1 ? "1 conta vencendo em breve" : `${dueSoon.length} contas vencendo em breve`;
+    headline = "Fique de olho nos próximos dias";
   }
 
   return (
@@ -95,14 +93,20 @@ export default async function DashboardPage({
         )}
 
         {quiet.length > 0 && <MoreBillsDisclosure bills={quiet} />}
+
+        {all.length > 0 && (
+          <p className="text-center text-[10px] font-mono uppercase tracking-widest text-[var(--ink-soft)] border-t border-dashed border-[var(--line)] pt-5">
+            Por hoje, é só isso
+          </p>
+        )}
       </div>
 
       <Link
         href="/contas/nova"
-        className="tap fixed bottom-6 right-6 bg-[var(--primary)] text-[var(--primary-ink)] rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-20"
+        className="tap fixed bottom-6 right-6 bg-[var(--primary)] text-[var(--primary-ink)] rounded-2xl w-14 h-14 flex items-center justify-center shadow-md border border-[var(--line)] z-20"
         aria-label="Nova conta"
       >
-        <Plus size={24} />
+        <Plus size={22} />
       </Link>
     </main>
   );

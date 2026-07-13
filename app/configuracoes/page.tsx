@@ -20,8 +20,8 @@ export default async function ConfiguracoesPage() {
   const leadDays = settings?.lead_days ?? 3;
 
   return (
-    <main className="min-h-screen bg-[var(--bg)] px-6 py-8">
-      <div className="max-w-md mx-auto space-y-6 fade-in">
+    <main className="min-h-screen bg-[var(--bg)] px-4 sm:px-6 py-8">
+      <div className="max-w-md mx-auto space-y-8 fade-in">
         <div className="flex items-center gap-3">
           <Link
             href="/"
@@ -30,32 +30,29 @@ export default async function ConfiguracoesPage() {
           >
             <ArrowLeft size={20} />
           </Link>
-          <h1 className="font-display text-2xl font-semibold text-[var(--primary)]">
+          <h1 className="font-display text-2xl font-semibold text-[var(--ink)]">
             Ajustes
           </h1>
         </div>
 
-        <section className="bg-[var(--surface)] rounded-2xl border border-[var(--line)] p-6">
-          <h2 className="font-medium text-[var(--ink)] mb-1">Notificações</h2>
+        <section>
+          <h2 className="font-mono text-[10px] tracking-widest uppercase text-[var(--ink-soft)] mb-3">
+            Notificações
+          </h2>
           <p className="text-sm text-[var(--ink-soft)] mb-4">
-            Ative para receber um aviso no celular quando uma conta estiver perto
-            de vencer. Sem custo — funciona melhor se você adicionar este app à
-            tela inicial do celular.
+            Um aviso no celular quando algo estiver perto de vencer.
           </p>
           <PushSubscribeButton />
         </section>
 
-        <section className="bg-[var(--surface)] rounded-2xl border border-[var(--line)] p-6">
-          <h2 className="font-medium text-[var(--ink)] mb-1">
+        <section className="pt-2 border-t border-[var(--line)]">
+          <h2 className="font-mono text-[10px] tracking-widest uppercase text-[var(--ink-soft)] mb-3 mt-6">
             Antecedência do lembrete
           </h2>
-          <p className="text-sm text-[var(--ink-soft)] mb-4">
-            Com quantos dias de antecedência você quer ser avisado?
-          </p>
           <LeadDaysControl initialValue={leadDays} />
         </section>
 
-        <form action={signOut}>
+        <form action={signOut} className="pt-2">
           <button
             type="submit"
             className="tap w-full text-center text-sm text-[var(--ink-soft)] py-2.5"

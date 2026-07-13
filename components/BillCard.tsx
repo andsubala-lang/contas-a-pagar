@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, Check } from "lucide-react";
 import { daysUntil, formatDateBR, formatMoneyBRL, computeNextDueDate } from "@/lib/dates";
 import { markBillPaid, reopenBill } from "@/lib/actions";
 import { showToast } from "@/lib/toast";
@@ -121,7 +121,7 @@ export default function BillCard({
             <button
               disabled={isPending}
               onClick={handleReopen}
-              className="tap text-xs sm:text-sm px-3 py-1.5 rounded-lg border border-[var(--line)] text-[var(--ink-soft)]"
+              className="tap text-xs text-[var(--ink-soft)] px-2 py-1"
             >
               Reabrir
             </button>
@@ -129,9 +129,11 @@ export default function BillCard({
             <button
               disabled={isPending}
               onClick={handleMarkPaidClick}
-              className="tap text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-ink)] disabled:opacity-60"
+              aria-label="Marcar paga"
+              title="Marcar paga"
+              className="tap w-9 h-9 rounded-full border border-[var(--primary)] text-[var(--primary)] flex items-center justify-center disabled:opacity-60"
             >
-              Marcar paga
+              <Check size={16} />
             </button>
           )}
         </div>
