@@ -124,38 +124,38 @@ export default function PushSubscribeButton() {
   }
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={status === "on" ? disable : enable}
-          disabled={status === "working"}
-          className={`rounded-lg px-4 py-2.5 text-sm font-medium ${
-            status === "on"
-              ? "border border-[var(--line)] text-[var(--ink-soft)]"
-              : "bg-[var(--primary)] text-[var(--primary-ink)]"
-          }`}
-        >
-          {status === "working"
-            ? "Aguarde..."
-            : status === "on"
-            ? "Notificações ativadas · desativar"
-            : "Ativar notificações"}
-        </button>
+    <div className="space-y-2">
+      <button
+        onClick={status === "on" ? disable : enable}
+        disabled={status === "working"}
+        className={`tap rounded-lg px-4 py-2.5 text-sm font-medium ${
+          status === "on"
+            ? "border border-[var(--line)] text-[var(--ink-soft)]"
+            : "bg-[var(--primary)] text-[var(--primary-ink)]"
+        }`}
+      >
+        {status === "working"
+          ? "Aguarde..."
+          : status === "on"
+          ? "Notificações ativadas · desativar"
+          : "Ativar notificações"}
+      </button>
 
-        {status === "on" && (
+      {status === "on" && (
+        <div>
           <button
             onClick={handleTest}
             disabled={testState === "sending"}
-            className="rounded-lg px-4 py-2.5 text-sm font-medium border border-[var(--line)] text-[var(--ink)]"
+            className="tap text-xs text-[var(--ink-soft)] underline underline-offset-2"
           >
             {testState === "sending"
               ? "Enviando..."
               : testState === "sent"
-              ? "Enviada ✓"
+              ? "Notificação enviada ✓"
               : "Enviar notificação de teste"}
           </button>
-        )}
-      </div>
+        </div>
+      )}
       {error && <p className="text-sm text-[var(--danger)]">{error}</p>}
     </div>
   );

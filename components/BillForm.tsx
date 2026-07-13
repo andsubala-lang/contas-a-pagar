@@ -43,6 +43,7 @@ export default function BillForm({
         <input
           name="name"
           required
+          autoFocus
           defaultValue={initial?.name}
           placeholder="Ex: Aluguel, Internet, Netflix"
           className="w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)]"
@@ -52,18 +53,26 @@ export default function BillForm({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm text-[var(--ink-soft)] mb-1">
-            Valor (R$)
+            Valor
           </label>
-          <input
-            name="amount"
-            type="number"
-            step="0.01"
-            min="0"
-            required
-            defaultValue={initial?.amount}
-            placeholder="0,00"
-            className="w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)] font-mono"
-          />
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ink-soft)] font-mono text-sm pointer-events-none">
+              R$
+            </span>
+            <input
+              name="amount"
+              type="text"
+              inputMode="decimal"
+              required
+              defaultValue={
+                initial?.amount != null
+                  ? String(initial.amount).replace(".", ",")
+                  : undefined
+              }
+              placeholder="0,00"
+              className="w-full rounded-lg border border-[var(--line)] pl-9 pr-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)] font-mono"
+            />
+          </div>
         </div>
         <div>
           <label className="block text-sm text-[var(--ink-soft)] mb-1">
@@ -110,7 +119,7 @@ export default function BillForm({
           <option value="yearly">Todo ano</option>
         </select>
         <p className="text-xs text-[var(--ink-soft)] mt-1">
-          Ao marcar como paga, uma conta recorrente já agenda o próximo vencimento automaticamente.
+          Ao pagar, renova sozinha para o próximo ciclo.
         </p>
       </div>
 
@@ -123,13 +132,13 @@ export default function BillForm({
       <div className="flex gap-3 pt-2">
         <Link
           href="/"
-          className="flex-1 text-center rounded-lg border border-[var(--line)] py-2.5 text-[var(--ink-soft)]"
+          className="tap flex-1 text-center rounded-lg py-2.5 text-sm text-[var(--ink-soft)]"
         >
           Cancelar
         </Link>
         <button
           type="submit"
-          className="flex-1 rounded-lg bg-[var(--primary)] text-[var(--primary-ink)] py-2.5 font-medium"
+          className="tap flex-1 rounded-lg bg-[var(--primary)] text-[var(--primary-ink)] py-2.5 font-medium"
         >
           {submitLabel}
         </button>

@@ -102,7 +102,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[var(--primary)] text-[var(--primary-ink)] rounded-lg py-2.5 font-medium disabled:opacity-60"
+            className="tap w-full bg-[var(--primary)] text-[var(--primary-ink)] rounded-lg py-2.5 font-medium disabled:opacity-60"
           >
             {loading
               ? "Aguarde..."

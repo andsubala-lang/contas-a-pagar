@@ -11,6 +11,10 @@ function addInterval(dateStr: string, recurring: string) {
   return d.toISOString().slice(0, 10);
 }
 
+function parseAmount(raw: FormDataEntryValue | null) {
+  return Number(String(raw || "").replace(",", "."));
+}
+
 export async function createBill(formData: FormData) {
   const supabase = await createClient();
   const {
@@ -19,7 +23,7 @@ export async function createBill(formData: FormData) {
   if (!user) redirect("/login");
 
   const name = String(formData.get("name") || "").trim();
-  const amount = Number(formData.get("amount"));
+  const amount = parseAmount(formData.get("amount"));
   const category = String(formData.get("category") || "outros");
   const due_date = String(formData.get("due_date"));
   const recurring = String(formData.get("recurring") || "none");
@@ -40,7 +44,7 @@ export async function createBill(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/");
-  redirect("/");
+  redirect("/?toast=" + encodeURIComponent("Conta criada"));
 }
 
 export async function updateBill(id: string, formData: FormData) {
@@ -51,7 +55,7 @@ export async function updateBill(id: string, formData: FormData) {
   if (!user) redirect("/login");
 
   const name = String(formData.get("name") || "").trim();
-  const amount = Number(formData.get("amount"));
+  const amount = parseAmount(formData.get("amount"));
   const category = String(formData.get("category") || "outros");
   const due_date = String(formData.get("due_date"));
   const recurring = String(formData.get("recurring") || "none");
@@ -65,7 +69,7 @@ export async function updateBill(id: string, formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/");
-  redirect("/");
+  redirect("/?toast=" + encodeURIComponent("Alterações salvas"));
 }
 
 export async function deleteBill(id: string) {
@@ -77,7 +81,7 @@ export async function deleteBill(id: string) {
 
   await supabase.from("bills").delete().eq("id", id).eq("user_id", user.id);
   revalidatePath("/");
-  redirect("/");
+  redirect("/?toast=" + encodeURIComponent("Conta excluída"));
 }
 
 export async function markBillPaid(id: string) {

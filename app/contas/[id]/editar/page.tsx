@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import BillForm from "@/components/BillForm";
-import { updateBill, deleteBill } from "@/lib/actions";
+import DeleteBillButton from "@/components/DeleteBillButton";
+import { updateBill } from "@/lib/actions";
 
 export default async function EditarContaPage({
   params,
@@ -19,7 +20,6 @@ export default async function EditarContaPage({
   if (!bill) notFound();
 
   const updateWithId = updateBill.bind(null, id);
-  const deleteWithId = deleteBill.bind(null, id);
 
   return (
     <main className="min-h-screen bg-[var(--bg)] px-6 py-8">
@@ -29,14 +29,9 @@ export default async function EditarContaPage({
         </h1>
         <BillForm action={updateWithId} initial={bill} submitLabel="Salvar alterações" />
 
-        <form action={deleteWithId} className="mt-4">
-          <button
-            type="submit"
-            className="w-full text-center text-sm text-[var(--danger)] py-2.5 rounded-lg border border-[var(--danger)] border-opacity-30"
-          >
-            Excluir conta
-          </button>
-        </form>
+        <div className="mt-4">
+          <DeleteBillButton id={id} />
+        </div>
       </div>
     </main>
   );

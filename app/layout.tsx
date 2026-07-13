@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import ToastHost from "@/components/ToastHost";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const display = Space_Grotesk({
@@ -40,6 +41,7 @@ export default function RootLayout({
         className={`${inter.variable} ${display.variable} ${plexMono.variable} antialiased`}
       >
         <ServiceWorkerRegister />
+        <ToastHost />
         {children}
       </body>
     </html>

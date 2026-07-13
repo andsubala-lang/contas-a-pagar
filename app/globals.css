@@ -17,10 +17,33 @@
   --amber-soft: rgba(242, 115, 46, 0.16);
   --danger: #ef4444;
   --danger-soft: rgba(239, 68, 68, 0.15);
-  --ok: #60a5fa;
-  --ok-soft: rgba(59, 130, 246, 0.14);
+  --ok: #8b93a3;
+  --ok-soft: rgba(139, 147, 163, 0.12);
   --success: #4ade80;
   --success-soft: rgba(74, 222, 128, 0.14);
+
+  /* Unified motion system — the only durations/easing used anywhere in the app */
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tap feedback — applied to every interactive control (buttons, FAB, links acting as buttons) */
+.tap {
+  transition: transform var(--dur-fast) var(--ease-standard),
+    opacity var(--dur-fast) var(--ease-standard);
+}
+.tap:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tap {
+    transition: none;
+  }
+  .tap:active {
+    transform: none;
+  }
 }
 
 * {
@@ -55,6 +78,15 @@ input::placeholder {
   opacity: 0.7;
 }
 
+/* Prevent browser autofill from forcing a white background in dark mode */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink);
+  -webkit-box-shadow: 0 0 0px 1000px var(--surface-input) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 .stub {
   border-right: 1px dashed var(--line);
 }
@@ -68,7 +100,7 @@ input::placeholder {
 
 @media (prefers-reduced-motion: no-preference) {
   .fade-in {
-    animation: fadeIn 0.25s ease-out;
+    animation: fadeIn var(--dur-base) var(--ease-standard);
   }
 }
 
@@ -81,4 +113,58 @@ input::placeholder {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Toast */
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes toastOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.toast-in {
+  animation: toastIn var(--dur-base) var(--ease-standard);
+}
+.toast-out {
+  animation: toastOut var(--dur-base) var(--ease-standard);
+}
+
+/* Modal */
+@keyframes modalBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes modalPanelIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.modal-backdrop-in {
+  animation: modalBackdropIn var(--dur-base) var(--ease-standard);
+}
+.modal-panel-in {
+  animation: modalPanelIn var(--dur-base) var(--ease-standard);
 }

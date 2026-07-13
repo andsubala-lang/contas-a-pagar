@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useTransition } from "react";
-import { daysUntil, formatDateBR, formatMoneyBRL } from "@/lib/dates";
+import { useState, useTransition } from "react";
+import { Pencil } from "lucide-react";
+import { daysUntil, formatDateBR, formatMoneyBRL, computeNextDueDate } from "@/lib/dates";
 import { markBillPaid, reopenBill } from "@/lib/actions";
+import { showToast } from "@/lib/toast";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 type Bill = {
   id: string;
@@ -32,7 +35,9 @@ export default function BillCard({
   leadDays: number;
 }) {
   const [isPending, startTransition] = useTransition();
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const days = daysUntil(bill.due_date);
+  const isRecurring = bill.recurring === "monthly" || bill.recurring === "yearly";
 
   let stubBg = "bg-[var(--ok-soft)]";
   let stubText = "text-[var(--ok)]";
@@ -45,13 +50,36 @@ export default function BillCard({
   } else if (days < 0) {
     stubBg = "bg-[var(--danger-soft)]";
     stubText = "text-[var(--danger)]";
-    label = days === -1 ? "1 dia atrasada" : `${Math.abs(days)} dias atrasada`;
+    label = "atrasada";
   } else if (days <= leadDays) {
     stubBg = "bg-[var(--amber-soft)]";
     stubText = "text-[var(--amber)]";
-    label = days === 0 ? "vence hoje" : days === 1 ? "vence amanhã" : `faltam ${days} dias`;
+    label = days === 0 ? "vence hoje" : days === 1 ? "vence amanhã" : "dias";
   } else {
-    label = `faltam ${days} dias`;
+    label = "dias";
+  }
+
+  function doMarkPaid() {
+    startTransition(async () => {
+      await markBillPaid(bill.id);
+      showToast(isRecurring ? "Paga — renovada para o próximo ciclo" : "Conta marcada como paga");
+      setConfirmOpen(false);
+    });
+  }
+
+  function handleMarkPaidClick() {
+    if (isRecurring) {
+      setConfirmOpen(true);
+    } else {
+      doMarkPaid();
+    }
+  }
+
+  function handleReopen() {
+    startTransition(async () => {
+      await reopenBill(bill.id);
+      showToast("Conta reaberta");
+    });
   }
 
   return (
@@ -74,43 +102,52 @@ export default function BillCard({
       <div className="flex-1 p-3 sm:p-4 flex flex-col gap-2.5 sm:gap-3 min-w-0">
         <div className="min-w-0">
           <p className="font-medium text-[var(--ink)] text-sm sm:text-base truncate">{bill.name}</p>
-          <p className="text-xs sm:text-sm text-[var(--ink-soft)] font-mono">
-            {formatMoneyBRL(bill.amount)} · vence {formatDateBR(bill.due_date)}
-          </p>
-          <p className="text-[11px] sm:text-xs text-[var(--ink-soft)] mt-0.5">
-            {CATEGORY_LABEL[bill.category] || "Outros"}
-            {bill.recurring !== "none" && (
-              <span> · {bill.recurring === "monthly" ? "mensal" : "anual"}</span>
-            )}
+          <p className="text-xs sm:text-sm text-[var(--ink-soft)] font-mono truncate">
+            {formatMoneyBRL(bill.amount)} · {formatDateBR(bill.due_date)} · {CATEGORY_LABEL[bill.category] || "Outros"}
+            {bill.recurring !== "none" && (bill.recurring === "monthly" ? " · mensal" : " · anual")}
           </p>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href={`/contas/${bill.id}/editar`}
-            className="flex-1 sm:flex-initial text-center text-xs sm:text-sm text-[var(--ink-soft)] px-3 py-1.5 rounded-lg border border-[var(--line)]"
+            aria-label="Editar conta"
+            className="tap text-[var(--ink-soft)] p-2 rounded-lg"
           >
-            Editar
+            <Pencil size={16} />
           </Link>
+          <div className="flex-1" />
           {bill.is_paid ? (
             <button
               disabled={isPending}
-              onClick={() => startTransition(() => reopenBill(bill.id))}
-              className="flex-1 sm:flex-initial text-xs sm:text-sm px-3 py-1.5 rounded-lg border border-[var(--line)] text-[var(--ink-soft)]"
+              onClick={handleReopen}
+              className="tap text-xs sm:text-sm px-3 py-1.5 rounded-lg border border-[var(--line)] text-[var(--ink-soft)]"
             >
               Reabrir
             </button>
           ) : (
             <button
               disabled={isPending}
-              onClick={() => startTransition(() => markBillPaid(bill.id))}
-              className="flex-1 sm:flex-initial text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-ink)] disabled:opacity-60"
+              onClick={handleMarkPaidClick}
+              className="tap text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-[var(--primary)] text-[var(--primary-ink)] disabled:opacity-60"
             >
               Marcar paga
             </button>
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Renovar conta recorrente?"
+        description={`Isso marca como paga e reagenda o vencimento para ${formatDateBR(
+          computeNextDueDate(bill.due_date, bill.recurring)
+        )}.`}
+        confirmLabel="Confirmar"
+        pending={isPending}
+        onConfirm={doMarkPaid}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   );
 }

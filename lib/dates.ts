@@ -35,3 +35,11 @@ export const RECURRING_LABEL: Record<string, string> = {
   monthly: "Mensal",
   yearly: "Anual",
 };
+
+export function computeNextDueDate(dueDate: string, recurring: string): string {
+  if (recurring !== "monthly" && recurring !== "yearly") return dueDate;
+  const d = new Date(dueDate + "T00:00:00");
+  if (recurring === "monthly") d.setMonth(d.getMonth() + 1);
+  else d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().slice(0, 10);
+}

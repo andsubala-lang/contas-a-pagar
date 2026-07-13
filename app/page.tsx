@@ -1,9 +1,16 @@
 import Link from "next/link";
+import { Settings, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import BillCard from "@/components/BillCard";
+import ToastFlash from "@/components/ToastFlash";
 import { daysUntil } from "@/lib/dates";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ toast?: string }>;
+}) {
+  const { toast } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -35,7 +42,8 @@ export default async function DashboardPage() {
   const upcoming = unpaid.filter((b) => daysUntil(b.due_date) > leadDays);
 
   return (
-    <main className="min-h-screen bg-[var(--bg)] pb-24">
+    <main className="min-h-screen bg-[var(--bg)] pb-32">
+      <ToastFlash message={toast} />
       <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-5 sm:pb-6 flex items-start justify-between">
         <div>
           <p className="font-mono text-[10px] sm:text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-1">
@@ -51,9 +59,10 @@ export default async function DashboardPage() {
         </div>
         <Link
           href="/configuracoes"
-          className="text-sm text-[var(--ink-soft)] px-3 py-2 rounded-lg border border-[var(--line)] bg-[var(--surface)]"
+          aria-label="Ajustes"
+          className="tap text-[var(--ink-soft)] p-2.5 rounded-lg"
         >
-          Ajustes
+          <Settings size={20} />
         </Link>
       </header>
 
@@ -85,10 +94,10 @@ export default async function DashboardPage() {
 
       <Link
         href="/contas/nova"
-        className="fixed bottom-6 right-6 bg-[var(--primary)] text-[var(--primary-ink)] rounded-full w-14 h-14 flex items-center justify-center text-2xl shadow-lg"
+        className="tap fixed bottom-6 right-6 bg-[var(--primary)] text-[var(--primary-ink)] rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-20"
         aria-label="Nova conta"
       >
-        +
+        <Plus size={24} />
       </Link>
     </main>
   );
