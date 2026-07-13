@@ -3,6 +3,7 @@ import { Settings, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import BillCard from "@/components/BillCard";
 import ToastFlash from "@/components/ToastFlash";
+import MoreBillsDisclosure from "@/components/MoreBillsDisclosure";
 import { daysUntil } from "@/lib/dates";
 
 export default async function DashboardPage({
@@ -41,26 +42,33 @@ export default async function DashboardPage({
   });
   const upcoming = unpaid.filter((b) => daysUntil(b.due_date) > leadDays);
 
+  const needsAttention = [...overdue, ...dueSoon];
+  const quiet = [...upcoming, ...paid];
+
+  // Status headline — this single line is what the whole ritual depends on:
+  // it must answer "estou seguro, ou preciso agir?" before any list loads.
+  let headline = "Tudo tranquilo";
+  if (overdue.length > 0) {
+    headline =
+      overdue.length === 1
+        ? "1 conta atrasada — resolve quando puder"
+        : `${overdue.length} contas atrasadas — resolve quando puder`;
+  } else if (dueSoon.length > 0) {
+    headline =
+      dueSoon.length === 1 ? "1 conta vencendo em breve" : `${dueSoon.length} contas vencendo em breve`;
+  }
+
   return (
     <main className="min-h-screen bg-[var(--bg)] pb-32">
       <ToastFlash message={toast} />
-      <header className="px-4 sm:px-6 pt-6 sm:pt-8 pb-5 sm:pb-6 flex items-start justify-between">
-        <div>
-          <p className="font-mono text-[10px] sm:text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-1">
-            {new Date().toLocaleDateString("pt-BR", {
-              weekday: "long",
-              day: "2-digit",
-              month: "long",
-            })}
-          </p>
-          <h1 className="font-display text-2xl sm:text-3xl font-semibold text-[var(--primary)]">
-            Nexus
-          </h1>
-        </div>
+      <header className="px-4 sm:px-6 pt-8 sm:pt-10 pb-6 sm:pb-8 flex items-start justify-between gap-4">
+        <h1 className="font-display text-2xl sm:text-3xl font-semibold text-[var(--ink)] leading-snug">
+          {headline}
+        </h1>
         <Link
           href="/configuracoes"
           aria-label="Ajustes"
-          className="tap text-[var(--ink-soft)] p-2.5 rounded-lg"
+          className="tap text-[var(--ink-soft)] p-2.5 rounded-lg shrink-0"
         >
           <Settings size={20} />
         </Link>
@@ -78,18 +86,15 @@ export default async function DashboardPage({
           </div>
         )}
 
-        {overdue.length > 0 && (
-          <Section title="Atrasadas" bills={overdue} leadDays={leadDays} />
+        {needsAttention.length > 0 && (
+          <div className="space-y-2.5 sm:space-y-3">
+            {needsAttention.map((b) => (
+              <BillCard key={b.id} bill={b} leadDays={leadDays} />
+            ))}
+          </div>
         )}
-        {dueSoon.length > 0 && (
-          <Section title="Vencendo em breve" bills={dueSoon} leadDays={leadDays} />
-        )}
-        {upcoming.length > 0 && (
-          <Section title="Em dia" bills={upcoming} leadDays={leadDays} />
-        )}
-        {paid.length > 0 && (
-          <Section title="Pagas recentemente" bills={paid} leadDays={leadDays} />
-        )}
+
+        {quiet.length > 0 && <MoreBillsDisclosure bills={quiet} />}
       </div>
 
       <Link
@@ -100,28 +105,5 @@ export default async function DashboardPage({
         <Plus size={24} />
       </Link>
     </main>
-  );
-}
-
-function Section({
-  title,
-  bills,
-  leadDays,
-}: {
-  title: string;
-  bills: any[];
-  leadDays: number;
-}) {
-  return (
-    <section>
-      <h2 className="font-mono text-[10px] sm:text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-2 sm:mb-3">
-        {title} · {bills.length}
-      </h2>
-      <div className="space-y-2.5 sm:space-y-3">
-        {bills.map((b) => (
-          <BillCard key={b.id} bill={b} leadDays={leadDays} />
-        ))}
-      </div>
-    </section>
   );
 }
