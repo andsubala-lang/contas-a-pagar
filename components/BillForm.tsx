@@ -86,7 +86,7 @@ export default function BillForm({
         <select
           name="category"
           defaultValue={initial?.category || "outros"}
-          className="w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)] bg-white"
+          className="w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)] bg-[var(--surface-input)]"
         >
           {CATEGORIES.map((c) => (
             <option key={c.value} value={c.value}>
@@ -103,7 +103,7 @@ export default function BillForm({
         <select
           name="recurring"
           defaultValue={initial?.recurring || "none"}
-          className="w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)] bg-white"
+          className="w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)] bg-[var(--surface-input)]"
         >
           <option value="none">Não se repete</option>
           <option value="monthly">Todo mês</option>

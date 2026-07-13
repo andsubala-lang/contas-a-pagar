@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { savePushSubscription, removePushSubscription } from "@/lib/actions";
+import {
+  savePushSubscription,
+  removePushSubscription,
+  sendTestPush,
+} from "@/lib/actions";
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -21,6 +25,21 @@ export default function PushSubscribeButton() {
     "checking" | "unsupported" | "off" | "on" | "denied" | "working"
   >("checking");
   const [error, setError] = useState<string | null>(null);
+  const [testState, setTestState] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  );
+
+  async function handleTest() {
+    setTestState("sending");
+    try {
+      await sendTestPush();
+      setTestState("sent");
+      setTimeout(() => setTestState("idle"), 3000);
+    } catch (e: any) {
+      setError(e?.message || "Não foi possível enviar o teste.");
+      setTestState("error");
+    }
+  }
 
   useEffect(() => {
     check();
@@ -105,23 +124,39 @@ export default function PushSubscribeButton() {
   }
 
   return (
-    <div>
-      <button
-        onClick={status === "on" ? disable : enable}
-        disabled={status === "working"}
-        className={`rounded-lg px-4 py-2.5 text-sm font-medium ${
-          status === "on"
-            ? "border border-[var(--line)] text-[var(--ink-soft)]"
-            : "bg-[var(--primary)] text-[var(--primary-ink)]"
-        }`}
-      >
-        {status === "working"
-          ? "Aguarde..."
-          : status === "on"
-          ? "Notificações ativadas · desativar"
-          : "Ativar notificações"}
-      </button>
-      {error && <p className="text-sm text-[var(--danger)] mt-2">{error}</p>}
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={status === "on" ? disable : enable}
+          disabled={status === "working"}
+          className={`rounded-lg px-4 py-2.5 text-sm font-medium ${
+            status === "on"
+              ? "border border-[var(--line)] text-[var(--ink-soft)]"
+              : "bg-[var(--primary)] text-[var(--primary-ink)]"
+          }`}
+        >
+          {status === "working"
+            ? "Aguarde..."
+            : status === "on"
+            ? "Notificações ativadas · desativar"
+            : "Ativar notificações"}
+        </button>
+
+        {status === "on" && (
+          <button
+            onClick={handleTest}
+            disabled={testState === "sending"}
+            className="rounded-lg px-4 py-2.5 text-sm font-medium border border-[var(--line)] text-[var(--ink)]"
+          >
+            {testState === "sending"
+              ? "Enviando..."
+              : testState === "sent"
+              ? "Enviada ✓"
+              : "Enviar notificação de teste"}
+          </button>
+        )}
+      </div>
+      {error && <p className="text-sm text-[var(--danger)]">{error}</p>}
     </div>
   );
 }

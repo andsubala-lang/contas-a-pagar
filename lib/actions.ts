@@ -185,6 +185,59 @@ export async function removePushSubscription(endpoint: string) {
     .eq("user_id", user.id);
 }
 
+export async function sendTestPush() {
+  const webpush = (await import("web-push")).default;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Não autenticado.");
+
+  const { data: subs } = await supabase
+    .from("push_subscriptions")
+    .select("*")
+    .eq("user_id", user.id);
+
+  if (!subs || subs.length === 0) {
+    throw new Error("Nenhuma inscrição de notificação encontrada. Ative as notificações primeiro.");
+  }
+
+  webpush.setVapidDetails(
+    "mailto:contas@example.com",
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  );
+
+  const payload = JSON.stringify({
+    title: "Contas a Pagar",
+    body: "Notificação de teste — está tudo funcionando!",
+    url: "/",
+    tag: "teste",
+  });
+
+  let sent = 0;
+  for (const sub of subs) {
+    try {
+      await webpush.sendNotification(
+        { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+        payload
+      );
+      sent++;
+    } catch (err: any) {
+      if (err.statusCode === 404 || err.statusCode === 410) {
+        await supabase
+          .from("push_subscriptions")
+          .delete()
+          .eq("endpoint", sub.endpoint);
+      }
+    }
+  }
+
+  if (sent === 0) {
+    throw new Error("Não foi possível enviar. Tente desativar e ativar as notificações de novo.");
+  }
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();

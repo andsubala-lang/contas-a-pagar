@@ -50,7 +50,7 @@ export default async function ConfiguracoesPage() {
             <select
               name="lead_days"
               defaultValue={leadDays}
-              className="rounded-lg border border-[var(--line)] px-3 py-2 bg-white"
+              className="rounded-lg border border-[var(--line)] px-3 py-2 bg-[var(--surface-input)]"
             >
               {[1, 2, 3, 5, 7, 10].map((d) => (
                 <option key={d} value={d}>
