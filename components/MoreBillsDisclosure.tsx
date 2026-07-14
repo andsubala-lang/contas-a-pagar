@@ -4,10 +4,21 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import QuietBillRow from "@/components/QuietBillRow";
 
-export default function MoreBillsDisclosure({ bills }: { bills: any[] }) {
+export default function MoreBillsDisclosure({
+  bills,
+  monitoredCount,
+}: {
+  bills: any[];
+  monitoredCount: number;
+}) {
   const [open, setOpen] = useState(false);
 
   if (bills.length === 0) return null;
+
+  const label =
+    monitoredCount > 0
+      ? `${monitoredCount} ${monitoredCount === 1 ? "conta" : "contas"} sob controle`
+      : "Ver histórico";
 
   return (
     <div>
@@ -15,9 +26,7 @@ export default function MoreBillsDisclosure({ bills }: { bills: any[] }) {
         onClick={() => setOpen((v) => !v)}
         className="tap flex items-center gap-1.5 text-sm text-[var(--ink-soft)] font-mono"
       >
-        <span>
-          {bills.length} {bills.length === 1 ? "conta" : "contas"} sob controle
-        </span>
+        <span>{label}</span>
         <ChevronDown
           size={14}
           className={`transition-transform duration-[220ms] ${open ? "rotate-180" : ""}`}

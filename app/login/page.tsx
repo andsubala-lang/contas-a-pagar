@@ -8,7 +8,7 @@ export default function LoginPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const [mode, setMode] = useState<"entrar" | "criar">("entrar");
+  const [mode, setMode] = useState<"entrar" | "criar" | "recuperar">("entrar");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ export default function LoginPage() {
       }
       router.push("/");
       router.refresh();
-    } else {
+    } else if (mode === "criar") {
       const { error } = await supabase.auth.signUp({ email, password });
       setLoading(false);
       if (error) {
@@ -41,8 +41,24 @@ export default function LoginPage() {
         return;
       }
       setInfo("Conta criada. Verifique seu e-mail para confirmar o acesso.");
+    } else {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/redefinir-senha`,
+      });
+      setLoading(false);
+      if (error) {
+        setError("Não consegui enviar o link. Tente novamente.");
+        return;
+      }
+      setInfo("Enviamos um link para o seu e-mail com o próximo passo.");
     }
   }
+
+  const titles = {
+    entrar: "Acessar sua conta",
+    criar: "Criar sua conta",
+    recuperar: "Recuperar acesso",
+  };
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[var(--bg)] px-6">
@@ -51,8 +67,8 @@ export default function LoginPage() {
           <p className="font-mono text-xs tracking-widest uppercase text-[var(--ink-soft)] mb-2">
             Nexus
           </p>
-          <h1 className="font-display text-3xl font-semibold text-[var(--primary)]">
-            {mode === "entrar" ? "Acessar sua conta" : "Criar sua conta"}
+          <h1 className="font-display text-3xl font-semibold text-[var(--ink)]">
+            {titles[mode]}
           </h1>
         </div>
 
@@ -73,20 +89,37 @@ export default function LoginPage() {
               placeholder="voce@email.com"
             />
           </div>
-          <div>
-            <label className="block text-sm text-[var(--ink-soft)] mb-1">
-              Senha
-            </label>
-            <input
-              type="password"
-              required
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)] bg-[var(--surface-input)]"
-              placeholder="mínimo 6 caracteres"
-            />
-          </div>
+
+          {mode !== "recuperar" && (
+            <div>
+              <label className="block text-sm text-[var(--ink-soft)] mb-1">
+                Senha
+              </label>
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-lg border border-[var(--line)] px-3 py-2 outline-none focus:ring-2 focus:ring-[var(--primary)] bg-[var(--surface-input)]"
+                placeholder="mínimo 6 caracteres"
+              />
+            </div>
+          )}
+
+          {mode === "entrar" && (
+            <button
+              type="button"
+              onClick={() => {
+                setMode("recuperar");
+                setError(null);
+                setInfo(null);
+              }}
+              className="text-xs text-[var(--ink-soft)]"
+            >
+              Esqueceu a senha?
+            </button>
+          )}
 
           {error && (
             <p className="text-sm text-[var(--danger)] bg-[var(--danger-soft)] rounded-lg px-3 py-2">
@@ -108,7 +141,9 @@ export default function LoginPage() {
               ? "Aguarde..."
               : mode === "entrar"
               ? "Entrar"
-              : "Criar conta"}
+              : mode === "criar"
+              ? "Criar conta"
+              : "Enviar link"}
           </button>
         </form>
 
@@ -120,9 +155,11 @@ export default function LoginPage() {
           }}
           className="w-full text-center text-sm text-[var(--ink-soft)] mt-4"
         >
-          {mode === "entrar"
-            ? "Ainda não tem conta? Criar uma"
-            : "Já tem conta? Entrar"}
+          {mode === "criar"
+            ? "Já tem conta? Entrar"
+            : mode === "recuperar"
+            ? "Voltar para entrar"
+            : "Ainda não tem conta? Criar uma"}
         </button>
       </div>
     </main>

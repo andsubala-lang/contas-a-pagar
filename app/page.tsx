@@ -17,17 +17,22 @@ export default async function DashboardPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ data: bills }, { data: settings }] = await Promise.all([
-    supabase
-      .from("bills")
-      .select("*")
-      .order("due_date", { ascending: true }),
-    supabase
-      .from("user_settings")
-      .select("lead_days")
-      .eq("user_id", user!.id)
-      .maybeSingle(),
-  ]);
+  const [{ data: bills, error: billsError }, { data: settings, error: settingsError }] =
+    await Promise.all([
+      supabase
+        .from("bills")
+        .select("*")
+        .order("due_date", { ascending: true }),
+      supabase
+        .from("user_settings")
+        .select("lead_days")
+        .eq("user_id", user!.id)
+        .maybeSingle(),
+    ]);
+
+  if (billsError || settingsError) {
+    throw new Error("Não consegui confirmar suas contas agora.");
+  }
 
   const leadDays = settings?.lead_days ?? 3;
   const all = bills || [];
@@ -92,7 +97,9 @@ export default async function DashboardPage({
           </div>
         )}
 
-        {quiet.length > 0 && <MoreBillsDisclosure bills={quiet} />}
+        {quiet.length > 0 && (
+          <MoreBillsDisclosure bills={quiet} monitoredCount={upcoming.length} />
+        )}
 
         {all.length > 0 && (
           <p className="text-center text-[10px] font-mono uppercase tracking-widest text-[var(--ink-soft)] border-t border-dashed border-[var(--line)] pt-5">

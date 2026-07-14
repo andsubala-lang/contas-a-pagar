@@ -30,9 +30,10 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const isAuthRoute = request.nextUrl.pathname.startsWith("/login");
+  const isRecoveryRoute = request.nextUrl.pathname.startsWith("/redefinir-senha");
   const isPublicApi = request.nextUrl.pathname.startsWith("/api/cron");
 
-  if (!user && !isAuthRoute && !isPublicApi) {
+  if (!user && !isAuthRoute && !isRecoveryRoute && !isPublicApi) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
