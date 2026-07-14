@@ -27,7 +27,12 @@ export default async function EditarContaPage({
         <h1 className="font-display text-2xl font-semibold text-[var(--ink)] mb-6">
           Editar conta
         </h1>
-        <BillForm action={updateWithId} initial={bill} submitLabel="Salvar alterações" />
+        <BillForm
+          action={updateWithId}
+          initial={bill}
+          submitLabel="Salvar alterações"
+          identityReadout
+        />
 
         <div className="mt-4">
           <DeleteBillButton id={id} />

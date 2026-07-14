@@ -87,6 +87,33 @@ input:-webkit-autofill:focus {
   transition: background-color 9999s ease-in-out 0s;
 }
 
+/* Identity-field experiment: a field reads as plain fact until the person
+   actually touches it — only then does it gain the visual chrome of an
+   editable control. No layout shift: border/background live in the same
+   box-sizing footprint at rest, they just become visible on focus. */
+.identity-field {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  transition: background-color var(--dur-base) var(--ease-standard),
+    border-color var(--dur-base) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-standard);
+}
+.identity-field:focus {
+  background: var(--surface-input);
+  border-color: var(--line);
+  box-shadow: 0 0 0 2px var(--primary);
+  outline: none;
+}
+.identity-field[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+.identity-field[type="date"]:focus::-webkit-calendar-picker-indicator,
+.identity-field[type="date"]:hover::-webkit-calendar-picker-indicator {
+  opacity: 0.6;
+}
+
 .stub {
   border-right: 1px dashed var(--line);
 }
